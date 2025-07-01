@@ -9,23 +9,21 @@ interface PredictionDisplayProps {
   result: {
     species: IrisSpecies;
     explanation: string;
+    imageDataUri: string;
   };
 }
 
-const speciesDetails: Record<IrisSpecies, { name: string; image: string; hint: string }> = {
+const speciesDetails: Record<IrisSpecies, { name: string; hint: string }> = {
   setosa: {
     name: 'Iris Setosa',
-    image: 'https://placehold.co/600x400.png',
     hint: 'iris setosa',
   },
   versicolor: {
     name: 'Iris Versicolor',
-    image: 'https://placehold.co/600x400.png',
     hint: 'iris versicolor',
   },
   virginica: {
     name: 'Iris Virginica',
-    image: 'https://placehold.co/600x400.png',
     hint: 'iris virginica',
   },
 };
@@ -45,7 +43,7 @@ export function PredictionDisplay({ result }: PredictionDisplayProps) {
       <CardContent>
         <div className="relative aspect-video w-full mb-6 rounded-lg overflow-hidden">
           <Image
-            src={details.image}
+            src={result.imageDataUri}
             alt={`Image of ${details.name}`}
             fill
             className="object-cover"

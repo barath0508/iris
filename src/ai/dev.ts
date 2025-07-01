@@ -3,3 +3,4 @@ config();
 
 import '@/ai/flows/analyze-prediction.ts';
 import '@/ai/flows/generate-starter-prompt.ts';
+import '@/ai/flows/generate-image.ts';

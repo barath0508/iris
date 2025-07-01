@@ -6,6 +6,7 @@ import { IrisInputForm, type IrisFormValues } from '@/components/iris-input-form
 import { PredictionDisplay } from '@/components/prediction-display';
 import { predictIris, type IrisSpecies } from '@/lib/prediction';
 import { analyzePrediction } from '@/ai/flows/analyze-prediction';
+import { generateImage } from '@/ai/flows/generate-image';
 import { Card, CardContent } from '@/components/ui/card';
 import { Flower, Loader2 } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
@@ -14,6 +15,13 @@ import { useToast } from '@/hooks/use-toast';
 type PredictionResult = {
   species: IrisSpecies;
   explanation: string;
+  imageDataUri: string;
+};
+
+const speciesDetails: Record<IrisSpecies, { hint: string }> = {
+  setosa: { hint: 'iris setosa' },
+  versicolor: { hint: 'iris versicolor' },
+  virginica: { hint: 'iris virginica' },
 };
 
 export default function Home() {
@@ -32,14 +40,18 @@ export default function Home() {
         values.petalWidth
       );
 
-      const analysis = await analyzePrediction({
-        ...values,
-        prediction: species,
-      });
+      const [analysis, image] = await Promise.all([
+        analyzePrediction({
+          ...values,
+          prediction: species,
+        }),
+        generateImage({ prompt: speciesDetails[species].hint })
+      ]);
 
       setPrediction({
         species,
         explanation: analysis.explanation,
+        imageDataUri: image.imageDataUri,
       });
     } catch (e) {
       console.error(e);
